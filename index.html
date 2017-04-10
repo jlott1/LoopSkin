@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Bootstrap Progress Bars</h2>
+  
+  <div class="row" id="noLooping">
+    <h2>No Looping</h2>
+    <div class="barArea">Loading...</div>
+  </div>
+  
+  <div class="row" id="loopFirstHalf">
+    <h2>Loop First Half</h2>
+    <div class="barArea">Loading...</div>
+  </div>
+  
+  <div class="row" id="loopLastHalf">
+    <h2>Loop Last Half</h2>
+    <div class="barArea">Loading...</div>
+  </div>
+
+  <div class="row" id="loopMiddle">
+    <h2>Loop Middle</h2>
+    <div class="barArea">Loading...</div>
+  </div>
+
+  <div class="row" id="randomExample">
+    <h2>Random Example</h2>
+    <div class="barArea">Loading...</div>
+  </div>
+  <script>
+    var deciamlToPercentage = function(val){
+        return Math.floor(100*val);
+    };
+    // time in seconds
+    var videoClipInfoToPercentage = function(videoDuration, startTime, endTime){
+        var length = Math.max(1, videoDuration);
+        var start = Math.max(0, Math.min(startTime, length));
+        var end = Math.max(0, Math.min(endTime, length));
+        
+        var left = deciamlToPercentage(start / length);
+        var middle = deciamlToPercentage((end-start) / length);
+        var right = 100 - left - middle;
+        return {
+            middle : middle,
+            left : left,
+            right : right 
+        };
+    };
+    var makeProgressbar = ( percent = {} ) => {
+        return `<div class="progress">
+            <div class="progress-bar progress-bar-info" role="progressbar" style="width:${percent.left}%">
+            </div>
+            <div class="progress-bar progress-bar-striped active" role="progressbar" style="width:${percent.middle}%">
+            looping
+            </div>
+            <div class="progress-bar progress-bar-info" role="progressbar" style="width:${percent.right}%">
+            </div>
+        </div>`;
+    };
+    var makeProgressbarFromVideoClipInfo = function(duration, startTime, endTime ){
+        var percentInfo = videoClipInfoToPercentage(duration, startTime, endTime);
+        return makeProgressbar( percentInfo );
+    };
+    var clipInfoToProgressBar = function(selector, clipInfo){
+        $(selector).html(
+            makeProgressbarFromVideoClipInfo(clipInfo.duration, clipInfo.startTime, clipInfo.endTime)
+        );
+    }
+    clipInfoToProgressBar('#noLooping .barArea', {
+        duration : 120,
+        startTime : 0,
+        endTime : 0
+    });
+    clipInfoToProgressBar('#loopFirstHalf .barArea', {
+        duration : 120,
+        startTime : 0,
+        endTime : 60
+    });
+    clipInfoToProgressBar('#loopMiddle .barArea', {
+        duration : 120,
+        startTime : 30,
+        endTime : 90
+    });
+    clipInfoToProgressBar('#loopLastHalf .barArea', {
+        duration : 120,
+        startTime : 60,
+        endTime : 120
+    });
+    var a = 0 + Math.floor(Math.random() * 10);
+    var b = a + Math.floor(Math.random() * 10);
+    var c = b + Math.floor(Math.random() * 10);
+    clipInfoToProgressBar('#randomExample .barArea', {
+        duration : c,
+        startTime : a,
+        endTime : b
+    });
+    $()
+  </script>
+  
+  
+</div>
+
+</body>
+</html>
